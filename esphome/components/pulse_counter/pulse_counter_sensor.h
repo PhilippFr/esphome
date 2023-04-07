@@ -1,7 +1,10 @@
 #pragma once
 
+#include <array>
+
 #include "esphome/core/component.h"
 #include "esphome/core/hal.h"
+#include "esphome/core/automation.h"
 #include "esphome/components/sensor/sensor.h"
 
 #if defined(USE_ESP32) && !defined(USE_ESP32_VARIANT_ESP32C3)
