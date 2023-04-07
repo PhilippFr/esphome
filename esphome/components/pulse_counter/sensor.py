@@ -17,10 +17,12 @@ from esphome.const import (
     STATE_CLASS_TOTAL_INCREASING,
     UNIT_PULSES_PER_MINUTE,
     UNIT_PULSES,
+    CONF_TRIGGER_ID,
 )
 from esphome.core import CORE
 
 CONF_USE_PCNT = "use_pcnt"
+CONF_ON_PULSE = "on_pulse"
 
 pulse_counter_ns = cg.esphome_ns.namespace("pulse_counter")
 PulseCounterCountMode = pulse_counter_ns.enum("PulseCounterCountMode")
@@ -38,6 +40,10 @@ PulseCounterSensor = pulse_counter_ns.class_(
 
 SetTotalPulsesAction = pulse_counter_ns.class_(
     "SetTotalPulsesAction", automation.Action
+)
+
+PulseCounterPulseTrigger = pulse_counter_ns.class_(
+    "PulseCounterPulseTrigger", automation.Trigger
 )
 
 
@@ -115,6 +121,13 @@ CONFIG_SCHEMA = cv.All(
                 accuracy_decimals=0,
                 state_class=STATE_CLASS_TOTAL_INCREASING,
             ),
+            cv.Optional(CONF_ON_PULSE): automation.validate_automation(
+                {
+                    cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(
+                        PulseCounterPulseTrigger
+                    ),
+                }
+            ),
         },
     )
     .extend(cv.polling_component_schema("60s")),
@@ -136,6 +149,10 @@ async def to_code(config):
     if CONF_TOTAL in config:
         sens = await sensor.new_sensor(config[CONF_TOTAL])
         cg.add(var.set_total_sensor(sens))
+
+    for conf in config.get(CONF_ON_PULSE, []):
+        trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)
+        await automation.build_automation(trigger, [], conf)
 
 
 @automation.register_action(

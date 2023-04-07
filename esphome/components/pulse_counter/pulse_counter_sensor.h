@@ -76,12 +76,25 @@ class PulseCounterSensor : public sensor::Sensor, public PollingComponent {
   float get_setup_priority() const override { return setup_priority::DATA; }
   void dump_config() override;
 
+  void add_on_pulse_callback(std::function<void()> callback) {
+    this->on_pulse_callback_.add(std::move(callback));
+  }
+
  protected:
   InternalGPIOPin *pin_;
   PulseCounterStorageBase &storage_;
   uint32_t last_time_{0};
   uint32_t current_total_{0};
   sensor::Sensor *total_sensor_{nullptr};
+
+  CallbackManager<void()> on_pulse_callback_;
+};
+
+class PulseCounterPulseTrigger : public Trigger<> {
+ public:
+  explicit PulseCounterPulseTrigger(PulseCounterSensor *parent) {
+    parent->add_on_pulse_callback([this]() { this->trigger(); });
+  }
 };
 
 }  // namespace pulse_counter
