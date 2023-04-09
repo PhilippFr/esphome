@@ -30,12 +30,13 @@ void IRAM_ATTR BasicPulseCounterStorage::gpio_intr(BasicPulseCounterStorage *arg
       break;
     case PULSE_COUNTER_INCREMENT:
       arg->counter++;
+      arg->callback_counter++;
       break;
     case PULSE_COUNTER_DECREMENT:
       arg->counter--;
+      arg->callback_counter++;
       break;
   }
-  arg->on_pulse_callback_.call();
 }
 bool BasicPulseCounterStorage::pulse_counter_setup(InternalGPIOPin *pin) {
   this->pin = pin;
@@ -164,6 +165,17 @@ void PulseCounterSensor::dump_config() {
   ESP_LOGCONFIG(TAG, "  Falling Edge: %s", EDGE_MODE_TO_STRING[this->storage_.falling_edge_mode]);
   ESP_LOGCONFIG(TAG, "  Filtering pulses shorter than %u µs", this->storage_.filter_us);
   LOG_UPDATE_INTERVAL(this);
+}
+
+void PulseCounterSensor::loop() {
+  pulse_counter_t raw = this->storage_.callback_counter;
+  if(callback_counter > 0){
+    {
+      InterruptLock lock;
+      this->on_clockwise_callback_.call();
+      this->storage_.callback_counter--;
+    }
+  }
 }
 
 void PulseCounterSensor::update() {
