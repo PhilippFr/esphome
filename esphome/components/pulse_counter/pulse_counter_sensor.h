@@ -49,8 +49,7 @@ struct BasicPulseCounterStorage : public PulseCounterStorageBase {
 
   ISRInternalGPIOPin isr_pin;
 
-  protected:
-    CallbackManager<void()> on_pulse_callback_;
+  volatile CallbackManager<void()> on_pulse_callback_;
 
 };
 

@@ -35,7 +35,7 @@ void IRAM_ATTR BasicPulseCounterStorage::gpio_intr(BasicPulseCounterStorage *arg
       arg->counter--;
       break;
   }
-  this->on_pulse_callback_.call();
+  arg->on_pulse_callback_.call();
 }
 bool BasicPulseCounterStorage::pulse_counter_setup(InternalGPIOPin *pin) {
   this->pin = pin;
