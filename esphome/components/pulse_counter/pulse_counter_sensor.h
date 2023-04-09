@@ -37,7 +37,7 @@ struct PulseCounterStorageBase {
   uint32_t filter_us{0};
   pulse_counter_t last_value{0};
 
-  volatile CallbackManager<void()> on_pulse_callback_;
+  CallbackManager<void()> on_pulse_callback_;
 };
 
 struct BasicPulseCounterStorage : public PulseCounterStorageBase {
