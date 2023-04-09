@@ -30,6 +30,8 @@ using pulse_counter_t = int32_t;
 struct PulseCounterStorageBase {
   virtual bool pulse_counter_setup(InternalGPIOPin *pin) = 0;
   virtual pulse_counter_t read_raw_value() = 0;
+  virtual pulse_counter_t read_callback_counter_value() = 0;
+  virtual void set_callback_counter_value(pulse_counter_t value);
 
   InternalGPIOPin *pin;
   PulseCounterCountMode rising_edge_mode{PULSE_COUNTER_INCREMENT};
@@ -43,6 +45,9 @@ struct BasicPulseCounterStorage : public PulseCounterStorageBase {
 
   bool pulse_counter_setup(InternalGPIOPin *pin) override;
   pulse_counter_t read_raw_value() override;
+  pulse_counter_t read_callback_counter_value() override;
+  void set_callback_counter_value(pulse_counter_t value) override;
+
 
   volatile pulse_counter_t counter{0};
   volatile pulse_counter_t callback_counter{0};

@@ -51,6 +51,13 @@ pulse_counter_t BasicPulseCounterStorage::read_raw_value() {
   this->last_value = counter;
   return ret;
 }
+pulse_counter_t BasicPulseCounterStorage::read_callback_counter_value() {
+  pulse_counter_t callback_counter = this->callback_counter;
+  return callback_counter;
+}
+void BasicPulseCounterStorage::set_callback_counter_value(pulse_counter_t value) {
+  this->callback_counter == value;
+}
 
 #ifdef HAS_PCNT
 bool HwPulseCounterStorage::pulse_counter_setup(InternalGPIOPin *pin) {
@@ -168,12 +175,12 @@ void PulseCounterSensor::dump_config() {
 }
 
 void PulseCounterSensor::loop() {
-  pulse_counter_t raw = this->storage_.callback_counter;
+  pulse_counter_t callback_counter = this->storage_.read_callback_counter_value();
   if(callback_counter > 0){
     {
       InterruptLock lock;
       this->on_clockwise_callback_.call();
-      this->storage_.callback_counter--;
+      this->storage_.set_callback_counter_value(callback_counter - 1);
     }
   }
 }
