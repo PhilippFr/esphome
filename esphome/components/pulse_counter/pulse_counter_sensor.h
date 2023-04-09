@@ -79,6 +79,7 @@ class PulseCounterSensor : public sensor::Sensor, public PollingComponent {
   void update() override;
   float get_setup_priority() const override { return setup_priority::DATA; }
   void dump_config() override;
+  void loop() override;
 
   void add_on_pulse_callback(std::function<void()> callback) {
     this->on_pulse_callback_.add(std::move(callback));
