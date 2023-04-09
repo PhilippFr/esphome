@@ -179,7 +179,7 @@ void PulseCounterSensor::loop() {
   if(callback_counter > 0){
     {
       InterruptLock lock;
-      this->on_clockwise_callback_.call();
+      this->on_pulse_callback_.call();
       this->storage_.set_callback_counter_value(callback_counter - 1);
     }
   }
