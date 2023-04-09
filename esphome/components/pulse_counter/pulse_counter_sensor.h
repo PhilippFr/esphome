@@ -82,7 +82,7 @@ class PulseCounterSensor : public sensor::Sensor, public PollingComponent {
   void dump_config() override;
 
   void add_on_pulse_callback(std::function<void()> callback) {
-    this->storage_.on_pulse_callback_.add(std::move(callback));
+    storage_.on_pulse_callback_.add(std::move(callback));
   }
 
  protected:
