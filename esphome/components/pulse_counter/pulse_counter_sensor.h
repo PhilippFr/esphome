@@ -48,6 +48,10 @@ struct BasicPulseCounterStorage : public PulseCounterStorageBase {
   volatile uint32_t last_pulse{0};
 
   ISRInternalGPIOPin isr_pin;
+
+  protected:
+    CallbackManager<void()> on_pulse_callback_;
+
 };
 
 #ifdef HAS_PCNT
@@ -80,7 +84,7 @@ class PulseCounterSensor : public sensor::Sensor, public PollingComponent {
   void dump_config() override;
 
   void add_on_pulse_callback(std::function<void()> callback) {
-    this->on_pulse_callback_.add(std::move(callback));
+    this->storage_->on_pulse_callback_.add(std::move(callback));
   }
 
  protected:
@@ -89,8 +93,6 @@ class PulseCounterSensor : public sensor::Sensor, public PollingComponent {
   uint32_t last_time_{0};
   uint32_t current_total_{0};
   sensor::Sensor *total_sensor_{nullptr};
-
-  CallbackManager<void()> on_pulse_callback_;
 };
 
 class PulseCounterPulseTrigger : public Trigger<> {
