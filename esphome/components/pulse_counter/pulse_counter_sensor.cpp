@@ -56,7 +56,7 @@ pulse_counter_t BasicPulseCounterStorage::read_callback_counter_value() {
   return callback_counter;
 }
 void BasicPulseCounterStorage::set_callback_counter_value(pulse_counter_t value) {
-  this->callback_counter == value;
+  this->callback_counter = value;
 }
 
 #ifdef HAS_PCNT
