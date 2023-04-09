@@ -36,8 +36,6 @@ struct PulseCounterStorageBase {
   PulseCounterCountMode falling_edge_mode{PULSE_COUNTER_DISABLE};
   uint32_t filter_us{0};
   pulse_counter_t last_value{0};
-
-  CallbackManager<void()> on_pulse_callback_;
 };
 
 struct BasicPulseCounterStorage : public PulseCounterStorageBase {
@@ -47,6 +45,7 @@ struct BasicPulseCounterStorage : public PulseCounterStorageBase {
   pulse_counter_t read_raw_value() override;
 
   volatile pulse_counter_t counter{0};
+  volatile pulse_counter_t callback_counter{0};
   volatile uint32_t last_pulse{0};
 
   ISRInternalGPIOPin isr_pin;
@@ -82,7 +81,7 @@ class PulseCounterSensor : public sensor::Sensor, public PollingComponent {
   void dump_config() override;
 
   void add_on_pulse_callback(std::function<void()> callback) {
-    storage_.on_pulse_callback_.add(std::move(callback));
+    this->on_pulse_callback_.add(std::move(callback));
   }
 
  protected:
@@ -91,6 +90,7 @@ class PulseCounterSensor : public sensor::Sensor, public PollingComponent {
   uint32_t last_time_{0};
   uint32_t current_total_{0};
   sensor::Sensor *total_sensor_{nullptr};
+  CallbackManager<void()> on_pulse_callback_;
 };
 
 class PulseCounterPulseTrigger : public Trigger<> {
