@@ -36,6 +36,8 @@ struct PulseCounterStorageBase {
   PulseCounterCountMode falling_edge_mode{PULSE_COUNTER_DISABLE};
   uint32_t filter_us{0};
   pulse_counter_t last_value{0};
+
+  volatile CallbackManager<void()> on_pulse_callback_;
 };
 
 struct BasicPulseCounterStorage : public PulseCounterStorageBase {
@@ -48,9 +50,6 @@ struct BasicPulseCounterStorage : public PulseCounterStorageBase {
   volatile uint32_t last_pulse{0};
 
   ISRInternalGPIOPin isr_pin;
-
-  volatile CallbackManager<void()> on_pulse_callback_;
-
 };
 
 #ifdef HAS_PCNT
