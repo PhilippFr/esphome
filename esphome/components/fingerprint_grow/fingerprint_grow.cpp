@@ -1,5 +1,6 @@
 #include "fingerprint_grow.h"
 #include "esphome/core/log.h"
+#include <cinttypes>
 
 namespace esphome {
 namespace fingerprint_grow {
@@ -77,10 +78,12 @@ void FingerprintGrowComponent::finish_enrollment(uint8_t result) {
     this->enrollment_done_callback_.call(this->enrollment_slot_);
     this->get_fingerprint_count_();
   } else {
-    this->enrollment_failed_callback_.call(this->enrollment_slot_);
+    if (this->enrollment_slot_ != ENROLLMENT_SLOT_UNUSED) {
+      this->enrollment_failed_callback_.call(this->enrollment_slot_);
+    }
   }
   this->enrollment_image_ = 0;
-  this->enrollment_slot_ = 0;
+  this->enrollment_slot_ = ENROLLMENT_SLOT_UNUSED;
   if (this->enrolling_binary_sensor_ != nullptr) {
     this->enrolling_binary_sensor_->publish_state(false);
   }
@@ -202,7 +205,7 @@ bool FingerprintGrowComponent::check_password_() {
 }
 
 bool FingerprintGrowComponent::set_password_() {
-  ESP_LOGI(TAG, "Setting new password: %d", this->new_password_);
+  ESP_LOGI(TAG, "Setting new password: %" PRIu32, this->new_password_);
   this->data_ = {SET_PASSWORD, (uint8_t) (this->new_password_ >> 24), (uint8_t) (this->new_password_ >> 16),
                  (uint8_t) (this->new_password_ >> 8), (uint8_t) (this->new_password_ & 0xFF)};
   if (this->send_command_() == OK) {
