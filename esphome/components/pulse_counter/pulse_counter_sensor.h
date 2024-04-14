@@ -9,11 +9,6 @@
 
 #include <cinttypes>
 
-#if defined(USE_ESP32) && !defined(USE_ESP32_VARIANT_ESP32C3)
-#include <driver/pcnt.h>
-#define HAS_PCNT
-#endif
-
 namespace esphome {
 namespace pulse_counter {
 
