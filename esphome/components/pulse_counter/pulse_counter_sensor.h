@@ -62,10 +62,6 @@ struct BasicPulseCounterStorage : public PulseCounterStorageBase {
 struct HwPulseCounterStorage : public PulseCounterStorageBase {
   bool pulse_counter_setup(InternalGPIOPin *pin) override;
   pulse_counter_t read_raw_value() override;
-  pulse_counter_t read_callback_counter_value() override;
-  void set_callback_counter_value(pulse_counter_t value) override;
-  
-  volatile pulse_counter_t callback_counter{0};
 
   pcnt_unit_t pcnt_unit;
 };
