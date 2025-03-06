@@ -1,0 +1,9 @@
+nixie:
+  id: nixie_display
+
+esphome:
+  on_boot:
+    then:
+      - nixie.set_display_text:
+          id: nixie_display
+          display_text: "1234"
