@@ -47,7 +47,6 @@ CONFIG_SCHEMA = cv.All(
             ): pins.internal_gpio_output_pin_schema,
         }
     ),
-    cv.only_with_esp_idf,
 )
 
 
