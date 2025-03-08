@@ -48,7 +48,7 @@ void NixieDisplay::dump_config() {
 void NixieDisplay::set_display_text(const std::string &text) {
   this->display_text_ = text;
   for (int i = 0; i < 4; i++) {
-    this->digits_[i] = this->display_text_[i];
+    this->digits_[i] = this->display_text_[i] - '0';  // Subtract ASCII 48 to account for ASCII encoding 0=48 to 57=9
   }
 }
 
