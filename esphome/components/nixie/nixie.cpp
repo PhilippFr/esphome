@@ -85,14 +85,15 @@ void NixieDisplay::set_counter(int value) {
   this->delay_microseconds_fast(5);
   this->counter_rst_pin_->digital_write(false);
 
+  this->counter_en_pin_->digital_write(false);
+  this->delay_microseconds_fast(5);
   for (int i = 0; i < value; i++) {
-    this->counter_en_pin_->digital_write(false);
-    this->delay_microseconds_fast(5);
     this->counter_clk_pin_->digital_write(true);
     this->delay_microseconds_fast(5);
     this->counter_clk_pin_->digital_write(false);
-    this->counter_en_pin_->digital_write(true);
+    this->delay_microseconds_fast(5);
   }
+  this->counter_en_pin_->digital_write(true);
 }
 
 void NixieDisplay::delay_microseconds_fast(uint32_t us) {
