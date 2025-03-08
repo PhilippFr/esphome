@@ -24,6 +24,7 @@ class NixieDisplay : public Component {
   void IRAM_ATTR update_display_timer_callback();
 
   void set_display_text(const std::string &text);
+  void set_multiplexing_speed(uint32_t speed) { multiplexing_speed_ = speed; }
 
  protected:
   void update_display();
@@ -38,6 +39,7 @@ class NixieDisplay : public Component {
   GPIOPin *counter_clk_pin_;
   GPIOPin *counter_en_pin_;
 
+  uint32_t multiplexing_speed_;
   esp_timer_handle_t display_timer_;
   int active_digit_ = 0;
   std::string display_text_;

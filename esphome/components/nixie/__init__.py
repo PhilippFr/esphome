@@ -18,7 +18,7 @@ CONF_DIGIT4_PIN = "digit4_pin"
 CONF_COUNTER_RST_PIN = "counter_rst_pin"
 CONF_COUNTER_CLK_PIN = "counter_clk_pin"
 CONF_COUNTER_EN_PIN = "counter_en_pin"
-
+CONF_MULTIPLEXING_SPEED = "multiplexing_speed"
 
 CONFIG_SCHEMA = cv.All(
     cv.Schema(
@@ -45,6 +45,9 @@ CONFIG_SCHEMA = cv.All(
             cv.Optional(
                 CONF_COUNTER_EN_PIN, default=10
             ): pins.internal_gpio_output_pin_schema,
+            cv.Optional(
+                CONF_MULTIPLEXING_SPEED, default="5000us"
+            ): cv.positive_time_period_microseconds,
         }
     ),
 )
@@ -74,6 +77,8 @@ async def to_code(config):
 
     counter_en_pin = await cg.gpio_pin_expression(config[CONF_COUNTER_EN_PIN])
     cg.add(var.set_counter_en_pin(counter_en_pin))
+
+    cg.add(var.set_multiplexing_speed(config[CONF_MULTIPLEXING_SPEED]))
 
 
 @automation.register_action(

@@ -31,7 +31,7 @@ void NixieDisplay::setup() {
       .dispatch_method = ESP_TIMER_TASK,
       .name = "nixie_display_timer"};
   esp_timer_create(&display_timer_args, &this->display_timer_);
-  esp_timer_start_periodic(this->display_timer_, 5000);  // 5ms
+  esp_timer_start_periodic(this->display_timer_, this->multiplexing_speed_);
 }
 
 void NixieDisplay::dump_config() {
